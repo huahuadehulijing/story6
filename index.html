@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>改进措施占比分析</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #99351a;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        #chart-container {
+            width: 100%;
+            height: 500px;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            font-size: 18px;
+        }
+        .error {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #ccc;">改进措施占比分析</h1>
+        <div id="chart-container">
+            <div class="loading">加载中...</div>
+        </div>
+        <div id="chart-error" class="error" style="display: none;">
+            图表加载失败，请检查网络连接或刷新页面。
+        </div>
+    </div>
+
+    <script>
+        // 加载 ECharts 库
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js';
+        script.onload = initChart;
+        script.onerror = showError;
+        document.body.appendChild(script);
+
+        function initChart() {
+            // 隐藏加载提示
+            document.querySelector('.loading').style.display = 'none';
+            
+            // 初始化图表
+            const chartDom = document.getElementById('chart-container');
+            const myChart = echarts.init(chartDom);
+            
+            // 图表配置
+            const option = {
+                backgroundColor: 'transparent',
+                title: {
+                    text: '',
+                    left: 'center',
+                    top: 20,
+                    textStyle: {
+                        color: '#ccc'
+                    }
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: {c}% ({d}%)'
+                },
+                legend: {
+                    top: '5%',
+                    left: 'center',
+                    textStyle: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    }
+                },
+                series: [
+                    {
+                        name: '改进措施',
+                        type: 'pie',
+                        radius: ['40%', '70%'],
+                        avoidLabelOverlap: false,
+                        padAngle: 5,
+                        itemStyle: {
+                            borderRadius: 10
+                        },
+                        label: {
+                            show: false,
+                            position: 'center',
+                            formatter: '{b}: {c}%'
+                        },
+                        emphasis: {
+                            label: {
+                                show: true,
+                                fontSize: 20,
+                                fontWeight: 'bold',
+                                formatter: '{b}: {c}%'
+                            }
+                        },
+                        labelLine: {
+                            show: false
+                        },
+                        data: [
+                            { value: 24, name: '增加专题服务' },
+                            { value: 17, name: '增加多媒体互动' },
+                            { value: 25, name: '改善停车服务' },
+                            { value: 20, name: '改进餐饮服务' },
+                            { value: 14, name: '丰富旅游文创纪念品' }
+                        ]
+                    }
+                ]
+            };
+            
+            // 使用配置项显示图表
+            myChart.setOption(option);
+            
+            // 窗口大小变化时重绘图表
+            window.addEventListener('resize', () => {
+                myChart.resize();
+            });
+        }
+
+        function showError() {
+            document.querySelector('.loading').style.display = 'none';
+            document.getElementById('chart-error').style.display = 'block';
+        }
+    </script>
+</body>
+</html>    
